@@ -1,10 +1,18 @@
 <script>
   let task = "";
-  let todos = [];
+  let todos = JSON.parse(localStorage.getItem("1")) || [];
   let filter = "all";
+
+  if(localStorage.length === 0){
+    localStorage.setItem("1","[]");
+  }
+
   function addTask() {
     todos = [{ task: task, status: "pending" }, ...todos];
     task = "";
+
+    let mint=JSON.stringify(todos);
+    localStorage.setItem("1",mint);
   }
 
   function markcomplete(i) {
@@ -23,7 +31,28 @@
       <input type="text" bind:value={task} />
       <button on:click={addTask}>ADD</button>
     </div>
-{console.log(todos)}
+
+    <div class="filters">
+      <button
+        class={filter == "all" ? "active" : ""}
+        on:click={() => {
+          filter = "all";
+        }}>All</button
+      >
+      <button
+        class={filter == "completed" ? "active" : ""}
+        on:click={() => {
+          filter = "completed";
+        }}>Completed</button
+      >
+      <button
+        class={filter == "incompleted" ? "active" : ""}
+        on:click={() => {
+          filter = "incompleted";
+        }}>InCompleted</button
+      >
+    </div>
+
     <div class="tasks">
       {#each todos as todo,i}
         {#if filter == "all"}
@@ -63,29 +92,10 @@
           </div>
           {/if}
         {/if}
-      {:else}{/each}
+      {/each}
     </div>
 
-    <div class="filters">
-      <button
-        class={filter == "all" ? "active" : ""}
-        on:click={() => {
-          filter = "all";
-        }}>All</button
-      >
-      <button
-        class={filter == "completed" ? "active" : ""}
-        on:click={() => {
-          filter = "completed";
-        }}>Completed</button
-      >
-      <button
-        class={filter == "incompleted" ? "active" : ""}
-        on:click={() => {
-          filter = "incompleted";
-        }}>InCompleted</button
-      >
-    </div>
+
   </div>
 </div>
 
